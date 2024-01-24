@@ -2,41 +2,56 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-#include <vector>
 #include "employees.h"
 
-void Employee::add() 
-{
-    std::cout << "Please write name of employer: ";
-    std::cin >> name;
-    std::cout << "Please write surname of employer: ";
-    std::cin >> surname;
-    std::cout << "Please write gender of employer: ";
-    std::cin >> gender;
-    std::cout << "Please write age of employer: ";
-    std::cin >> age;
+void menu()
+{   
+    std::cout << "\nThis is list of employees, please choose one of the options below:" << std::endl;
+    std::cout << "\n1 - Show list of employees" << std::endl;
+    std::cout << "2 - Add a new employee" << std::endl;
+    std::cout << "3 - Search employee from list" << std::endl;
+    std::cout << "4 - Edit employee from list" << std::endl;
+    std::cout << "5 - Delete employee from list" << std::endl;
+    std::cout << "6 - Quit" << std::endl;
 
-    // save to file
-    employeesData.open("employeesData.doc", std::ios::out | std::ios::app); 
+    int option;
+    std::cout << "\nYour option: ";
+    std::cin >> option;
 
-    employeesData << "\nName: " << name << std::endl;
-    employeesData << "Surname: " << surname << std::endl;
-    employeesData << "Gender: " << gender << std::endl;
-    employeesData << "Age: " << age << std::endl;
+    Employee newEmployee;
 
-    std::cout << "Registered new employee!" << std::endl;
+    switch(option) 
+    {
+        case 1: 
+                newEmployee.showData();
+                break;
 
-    employeesData.close();
+        case 2: 
+                newEmployee.add();
+                break;
+
+        // case 3: ;
+        //         break;
+
+        // case 4: ;
+        //         break;
+
+        // case 5: ;
+        //         break;
+
+        case 6: 
+                exit(0);
+                break;
+    }
 }
 
-void Employee::show()
+void Employee::showData() // read from file
 {
-    // read file
-    employeesData.open("employeesData.doc", std::ios::in); 
-
-    if (employeesData.good() == false)
+    employeesData.open("employeesData.txt", std::ios::in); 
+    
+    if (!employeesData)
     {                 
-        std::cout<<"File doesn't exist";    
+        std::cout<<"File doesn't exist. Add a new employee.";    
         exit(0);
     } 
     else 
@@ -46,8 +61,8 @@ void Employee::show()
 
         while (getline(employeesData, line)) 
         {         
-           switch(numLine)
-           {
+            switch(numLine)
+            {
                 case 1: 
                         name = line; 
                         std::cout << name << std::endl; 
@@ -65,11 +80,39 @@ void Employee::show()
                         std::cout << age << std::endl; 
                         break;
                 numLine ++;
-           }   
+            }   
         }
     }
-    employeesData.close();
 }
+
+void Employee::add() // write to file
+{   
+    employeesData.open("employeesData.txt", std::ios::out | std::ios::app);
+
+    std::cout << "\nPlease write name of employer: ";
+    std::cin >> name;
+    std::cout << "Please write surname of employer: ";
+    std::cin >> surname;
+    std::cout << "Please write gender of employer: ";
+    std::cin >> gender;
+    std::cout << "Please write age of employer: ";
+    std::cin >> age;
+
+    employeesData << "\nName: " << name << std::endl;
+    employeesData << "Surname: " << surname << std::endl;
+    employeesData << "Gender: " << gender << std::endl;
+    employeesData << "Age: " << age << std::endl;
+
+    std::cout << "\nRegistered new employee!" << std::endl;
+
+    employeesData.close();
+
+    std::cout << "\nName: " << name << std::endl
+              << "Surname: " << surname << std::endl
+              << "Gender: " << gender << std::endl
+              << "Age: " << age << std::endl;
+}
+
 
 // void Employer::remove()
 // {
