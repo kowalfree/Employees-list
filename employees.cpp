@@ -16,7 +16,7 @@ void menu()
 
     int option;
     std::cout << "\nYour option: ";
-    std::cin >> option;
+    std::cin >> option; 
 
     Employee newEmployee;
 
@@ -28,10 +28,11 @@ void menu()
 
         case 2: 
                 newEmployee.add();
+                menu();
                 break;
 
-        // case 3: ;
-        //         break;
+        case 3: newEmployee.remove();
+                break;
 
         // case 4: ;
         //         break;
@@ -51,53 +52,61 @@ void Employee::showData() // read from file
     
     if (!employeesData)
     {                 
-        std::cout<<"File doesn't exist. Add a new employee.";    
+        std::cout<<"File doesn't exist. Add a new employee."; 
         exit(0);
     } 
     else 
     {
         std::string line; 
-        int numLine = {1}; 
+        int lineNum = {1};
 
         while (getline(employeesData, line)) 
         {         
-            switch(numLine)
-            {
-                case 1: 
-                        name = line; 
-                        std::cout << name << std::endl; 
-                        break;
-                case 2: 
-                        surname = line;  
-                        std::cout << surname << std::endl; 
-                        break;
-                case 3: 
-                        gender = line.at(0);  
-                        std::cout << gender << std::endl;
-                        break;
-                case 4: 
-                        age = atoi(line.c_str());  
-                        std::cout << age << std::endl; 
-                        break;
-                numLine ++;
-            }   
+            std::cout << line << std::endl;
+            lineNum++;
         }
+        allEmployees = lineNum/7;
+        std::cout << "\nNumber of registered employees: " << allEmployees << std::endl <<std::endl;
     }
+    
+    employeesData.close();
+}
+
+
+int Employee::count() // give number for new employee
+{
+    std::string line; 
+    employeeNum = {0}; 
+    int lineNum = {1};
+
+    employeesData.open("employeesData.txt", std::ios::in); 
+    
+        while (getline(employeesData, line)) 
+        {         
+            lineNum++;
+        }
+        employeeNum = (lineNum/7)+1;
+    
+    employeesData.close();
+    return employeeNum;
 }
 
 void Employee::add() // write to file
 {   
-    employeesData.open("employeesData.txt", std::ios::out | std::ios::app);
-
     std::cout << "\nPlease write name of employer: ";
     std::cin >> name;
     std::cout << "Please write surname of employer: ";
     std::cin >> surname;
-    std::cout << "Please write gender of employer: ";
+    std::cout << "Please write gender of employer [M/F]: ";
     std::cin >> gender;
     std::cout << "Please write age of employer: ";
     std::cin >> age;
 
+    count();
+
+    employeesData.open("employeesData.txt", std::ios::out | std::ios::app);
+
+    employeesData << "\n-------------------- Employee number "<< employeeNum << " --------------------" << std::endl;
     employeesData << "\nName: " << name << std::endl;
     employeesData << "Surname: " << surname << std::endl;
     employeesData << "Gender: " << gender << std::endl;
@@ -113,11 +122,10 @@ void Employee::add() // write to file
               << "Age: " << age << std::endl;
 }
 
-
-// void Employer::remove()
-// {
+void Employee::remove()
+{
     
-// }   
+}   
 
 Employee::Employee(std::string n, std::string s, char g, int a) 
 {
@@ -129,5 +137,5 @@ Employee::Employee(std::string n, std::string s, char g, int a)
 
 Employee::~Employee() 
 {
-     std::cout << "\nClean" << std::endl;
+//      std::cout << "\nClean" << std::endl;
 }
