@@ -1,28 +1,32 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <limits>
 #include <cstdlib>
+#include <cstdio>
 
-
-void menu();
-
+int display_menu();
+void remove_list();
+int validate_integer(const int &size);
+  
 class Employee 
 {
+    int employeeNum;
     std::string name, surname;
     char gender;
     int age;
-    
-    int employeeNum;
-    int allEmployees;
-    std::fstream employeesData; 
    
     public:
     
-    Employee(std::string = "unknown", std::string = "unknown", char = '-', int = 0);
+    Employee(int = 0, std::string = "unknown", std::string = "unknown", char = '-', int = 0);
     ~Employee();
+    Employee(const Employee &copy_obj);
 
-    void showData();
-    int count();
-    void add();
-    void remove();
+    std::vector<Employee> create_vector(Employee &member);
+    void showData(const std::vector<Employee> &current_vector, const int &size);
+    void generate_doc_file(const std::vector<Employee> &current_vector, const int &size);
+    void add(const std::vector<Employee> &current_vector, const int &size);
+    int search(const std::vector<Employee> &current_vector, const int &size);
+    void delete_employee(std::vector<Employee> &current_vector, int &size);
 };
