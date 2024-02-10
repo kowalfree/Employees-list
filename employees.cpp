@@ -5,13 +5,53 @@
 #include <cstdlib>
 #include <limits>
 #include <cstdio>
+#include <regex>
+#include <conio.h>
 #include "employees.h"
 
+bool checkInteger(const std::string &example_input) // function for validate input_integer
+{
+    int input_integer;
+    bool check = 0;
+    std::regex isInteger("\\D"); // \\D: matches any non-digit characters
+    bool result = regex_search(example_input, isInteger);
+
+    if(result)
+    {   
+        std::cout << "\nInput value is not correct. Try again." << std::endl << std::endl;
+    }
+    else
+    {   
+        check = 1; 
+    }
+    
+    return check;
+}
+
+bool checkString(const std::string &example_string) // function for validate input_string
+{
+    int input_string;
+    bool check = 0;
+    std::regex isString("[\\d\\W_]"); 
+    // regex = [\\d\\W_] = [-_'\";:,.<>/?=+!@#$%^&*(){}|\\`\]\[~0-9], \\d: matches any digit character. \\W: matches any non-word character. 
+    bool result = regex_search(example_string, isString);
+
+    if(result)
+    {   
+        std::cout << "\nInput value is not correct. Try again." << std::endl << std::endl;
+    }
+    else
+    {   
+        check = 1; 
+    }
+    
+    return check;
+}
 
 int display_menu() // display menu with options
 {
-    std::cout << "\nThis is list of employees, please choose one of the options below:" << std::endl;
-    std::cout << "\n1 - Show all list of employees" << std::endl;
+    std::cout << "\nThis is list of employees, please choose one of the options below:" << std::endl << std::endl;
+    std::cout << "1 - Show all list of employees" << std::endl;
     std::cout << "2 - Generate document file" << std::endl;
     std::cout << "3 - Add a new employee" << std::endl;
     std::cout << "4 - Search employee from list" << std::endl;
@@ -20,8 +60,28 @@ int display_menu() // display menu with options
     std::cout << "7 - Quit" << std::endl;
 
     int option;
-    std::cout << "\nYour option: ";
-    std::cin >> option; 
+
+    while(true)
+    {
+        std::cout << "\nYour option: ";
+        std::string input;
+        std::cin >> input;
+        std::cout << std::endl;
+
+        if (checkInteger(input) == 1)
+        {
+            option = stoi(input);
+
+            if (option < 1 ||  option > 7) // condition for check range od numbers
+            {
+                std::cout << "\nInput value is out of range. Try again." << std::endl;
+            } 
+            else
+            {
+                break;
+            }
+        } 
+    }
 
     return option;
 }
@@ -33,11 +93,7 @@ std::vector<Employee> Employee::create_vector(Employee &member) // create vector
 
     employeesData.open("employeesData.txt", std::ios::in); 
     
-    if (!employeesData)
-    {                 
-        return box_for_members;
-    } 
-    else 
+    if(employeesData)
     {   
         while(true)
         {
@@ -93,8 +149,17 @@ void Employee::generate_doc_file(const std::vector<Employee> &current_vector, co
     {   
         std::string file_name;
         std::ofstream employeesData; 
-        std::cout << "\nPlease enter the name of your file. " << std::endl;
-        std::cin >> file_name;
+    
+        while(true) // check input name is string
+        {
+            std::cout << "Please enter the name of your file ( don't use any digits and special signs ): ";
+            std::cin >> file_name;
+
+            if (checkString(file_name) == 1)
+            {
+                break;
+            } 
+        }
 
         employeesData.open(file_name + ".doc", std::ios::out);
 
@@ -118,15 +183,65 @@ void Employee::generate_doc_file(const std::vector<Employee> &current_vector, co
 void Employee::add(const std::vector<Employee> &current_vector, const int &size) // write to file a new employee
 {   
     employeeNum = size + 1;
+    
+    while(true) // check input name is string
+    {
+        std::cout << "Please write name of employee: ";
+        std::cin >> name;
 
-    std::cout << "\nPlease write name of employee: ";
-    std::cin >> name;
-    std::cout << "Please write surname of employee: ";
-    std::cin >> surname;
-    std::cout << "Please write gender of employee [M/F]: ";
-    std::cin >> gender;
-    std::cout << "Please write age of employee: ";
-    std::cin >> age;
+        if (checkString(name) == 1)
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        } 
+    }
+
+    while(true) // check input surname is string
+    {
+        std::cout << "Please write surname of employee: ";
+        std::cin >> surname;
+
+        if (checkString(surname) == 1)
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        } 
+    }
+    
+    while(true) // check input gender is correct
+    {   
+        std::cout << "Please write gender of employee [M/F]: ";
+        gender = getche();
+        
+        if (gender == 'M' || gender == 'F')
+        {
+            break;
+        }
+        else if (gender == 'm' || gender == 'f')
+        {   
+            gender = toupper(gender);
+            break;
+        } 
+        else
+        {
+            std::cout << "\nInput value is not correct. Try again." << std::endl << std::endl;
+        }
+    }
+
+    while(true) // check input age is integer
+    {
+        std::cout << "\nPlease write age of employee: ";
+        std::string input_age;
+        std::cin >> input_age;
+
+        if (checkInteger(input_age) == 1)
+        {
+            age = stoi(input_age);
+            break;
+        } 
+    }
 
     std::ofstream employeesData; 
     employeesData.open("employeesData.txt", std::ios::out | std::ios::app);
@@ -162,9 +277,11 @@ int validate_integer(const int &size) // function for check if input is integer
         {
             std::cout << "\nPlease write number of employee: ";
 
-            std::cin >> number; 
-
-            if (!std::cin.good() || number <= 0) // integer check
+            std::cin >> number;
+            char ch; 
+            std::cin.get(ch);
+    
+            if (!std::cin.good() || number <= 0 || ch == '.') // statement for check if input is integer
             {
                 std::cout << "\nThe entered value is not correct, try again." << std::endl; 
                 std::cin.clear();
@@ -172,7 +289,7 @@ int validate_integer(const int &size) // function for check if input is integer
             } 
             else if ( number > size)
             {   
-                std::cout << "\nThe entered value is too high. There are " << size << " registered employees in the database. Try again." << std::endl; 
+                std::cout << "\nThe entered value is too high! There are " << size << " registered employees in the database. Try again." << std::endl; 
             } 
             else 
             { 
@@ -180,7 +297,7 @@ int validate_integer(const int &size) // function for check if input is integer
             }
         }
     }
-
+    
     return number - 1;
 }
 
@@ -196,45 +313,49 @@ int Employee::search(const std::vector<Employee> &current_vector, const int &siz
                     << "Gender: " << current_vector.at(new_number).gender << std::endl
                     << "Age: " << current_vector.at(new_number).age << std::endl << std::endl;
     }
-
+    
     return new_number;
 }   
 
 void Employee::delete_employee(std::vector<Employee> &current_vector, int &size) // function for delete just one employee from list
 {
-        int new_number = search(current_vector, size);
+    int new_number = search(current_vector, size);
+    
+    if (size != 0)
+    {
         current_vector.erase(current_vector.begin() + new_number);
-        size = current_vector.size();
-
         std::cout   << "Emploee number " << new_number + 1  << " was deleted!" << std::endl << std::endl;
+    }
 
-        if (size == 0) 
+    size = current_vector.size();
+
+    if (size == 0) 
+    {
+        remove("employeesData.txt");
+    } 
+    else
+    {
+        std::ofstream employeesData; 
+        employeesData.open("employeesData.txt", std::ios::out | std::ios::trunc); //  clear all file and write a new data file from vector of objects
+
+        for (int i = 0; i < size; i++)
         {
-            std::remove("employeesData.txt");
-        } 
-        else
-        {
-            std::ofstream employeesData; 
-            employeesData.open("employeesData.txt", std::ios::out | std::ios::trunc);
+            current_vector.at(i).employeeNum = i + 1;
+            
+            employeesData << current_vector.at(i).employeeNum << std::endl;
+            employeesData << current_vector.at(i).name << std::endl;
+            employeesData << current_vector.at(i).surname << std::endl;
+            employeesData << current_vector.at(i).gender << std::endl;
+            employeesData << current_vector.at(i).age << std::endl;
+        }
 
-            for (int i = 0; i < size; i++)
-            {
-                current_vector.at(i).employeeNum = i + 1;
-                
-                employeesData << current_vector.at(i).employeeNum << std::endl;
-                employeesData << current_vector.at(i).name << std::endl;
-                employeesData << current_vector.at(i).surname << std::endl;
-                employeesData << current_vector.at(i).gender << std::endl;
-                employeesData << current_vector.at(i).age << std::endl;
-            }
-
-            employeesData.close();
-        } 
+        employeesData.close();
+    } 
 }   
 
-void remove_list() // function for destroy all data file
+void remove_list() // function for destroy data file
 {   
-    if (std::remove("employeesData.txt") == 0)
+    if (remove("employeesData.txt") == 0)
     {
         std::cout << "\nData file deleted successfully!" << std::endl << std::endl;
     }

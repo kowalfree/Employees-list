@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <limits>
+#include <regex>
+#include <conio.h>
 #include "employees.h"
 
 

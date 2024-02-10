@@ -5,7 +5,11 @@
 #include <limits>
 #include <cstdlib>
 #include <cstdio>
+#include <regex>
+#include <conio.h>
 
+bool checkInteger(const std::string &example_input);
+bool checkString(const std::string &example_string);
 int display_menu();
 void remove_list();
 int validate_integer(const int &size);
