@@ -8,29 +8,35 @@
 #include <regex>
 #include <conio.h>
 
-bool checkInteger(const std::string &example_input);
-bool checkString(const std::string &example_string);
-int display_menu();
-void remove_list();
-int validate_integer(const int &size);
+bool isInteger(const std::string &exampleInput);
+bool isString(const std::string &exampleString);
+int displayMenu();
+void removeList();
   
-class Employee 
+namespace project 
 {
-    int employeeNum;
-    std::string name, surname;
-    char gender;
-    int age;
-   
-    public:
-    
-    Employee(int = 0, std::string = "unknown", std::string = "unknown", char = '-', int = 0);
-    ~Employee();
-    Employee(const Employee &copy_obj);
+    class Employee 
+    {   
+        private:
 
-    std::vector<Employee> create_vector(Employee &member);
-    void showData(const std::vector<Employee> &current_vector, const int &size);
-    void generate_doc_file(const std::vector<Employee> &current_vector, const int &size);
-    void add(const std::vector<Employee> &current_vector, const int &size);
-    int search(const std::vector<Employee> &current_vector, const int &size);
-    void delete_employee(std::vector<Employee> &current_vector, int &size);
-};
+        unsigned employeeId;
+        std::string name;
+        std::string surname;
+        char gender;
+        unsigned age;
+    
+        public:
+        
+        Employee(unsigned int objId = 0, std::string objName = "unknown", std::string objSurname = "unknown", char objGender = '-', unsigned int objAge = 0);
+        ~Employee();
+        Employee(const Employee &copyObj);
+
+        std::vector<Employee> createVector(Employee &member);
+        void showData(const std::vector<Employee> &currentVector);
+        void generateDocFile(const std::vector<Employee> &currentVector);
+        void addToFile(const std::vector<Employee> &currentVector);
+        int validateInteger(const std::vector<Employee> &currentVector);
+        int search(const std::vector<Employee> &currentVector);
+        void deleteEmployee(std::vector<Employee> &currentVector);
+    };
+}
