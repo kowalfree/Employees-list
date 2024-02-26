@@ -7,36 +7,42 @@
 #include <limits>
 #include <regex>
 #include <conio.h>
-#include "employees.h"
 
+#include "Employee.h"
+#include "Database.h"
+#include "FileSaver.h"
+#include "NoClassFunctions.h"
 
-int main () 
+int main() 
 {
+    Database localStorage;
+    FileSaver fileStorage;
     int choice = {0}; 
-
+    
     do
-    {
-        project::Employee newEmployee;
-        std::vector<project::Employee> readDataFile = newEmployee.createVector(newEmployee);
-
-        choice = displayMenu();
+    {   
+        std::vector<Employee> localData = fileStorage.createLocalStorage();
+        
+        displayMenu();
+        choice = makeChoice();
 
         switch(choice) 
         {
-            case 1: newEmployee.showData(readDataFile);
+            case 1: localStorage.showData(localData);
+                    system("pause"); break;
+            
+            case 2: localStorage.generateDocFile(localData);
+                    system("pause"); break;
+        
+            case 3: fileStorage.addToFile(localData);
                     system("pause"); break;
 
-            case 2: newEmployee.generateDocFile(readDataFile);
+            case 4: localStorage.search(localData);
                     system("pause"); break;
 
-            case 3: newEmployee.addToFile(readDataFile);
-                    system("pause"); break;
-
-            case 4: newEmployee.search(readDataFile);
-                    system("pause"); break;
-
-            case 5: newEmployee.deleteEmployee(readDataFile);
-                    system("pause"); break;
+            case 5: localStorage.deleteEmployee(localData);
+                    fileStorage.uploadDataFile(localData);
+                    system("pause"); break; 
 
             case 6: removeList();
                     system("pause"); break;
