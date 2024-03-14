@@ -34,11 +34,6 @@ vecEmp FileSaver::createLocalStorage() const // create vector of objects from fi
             read >> member.gender;
             read >> member.age;
 
-            if (read.eof())
-            {
-                break;
-            }
-
             tempData.push_back(member); 
         } 
     }
@@ -58,22 +53,18 @@ void FileSaver::addToFile(const vecEmp &currentVector) const // write to file a 
     newEmployee.employeeId = currentVector.size() + 1;
 
     write.open("employeesData.txt", std::ios::out | std::ios::app);
-
+    write << "\n";
     write << newEmployee.employeeId << endl;
     write << newEmployee.name << endl;
     write << newEmployee.surname << endl;
     write << newEmployee.gender << endl;
-    write << newEmployee.age << endl;
-
-    cout << "\nRegistered new employee!" << endl;
+    write << newEmployee.age;
 
     write.close();
 
-    cout << "\n---<< Employee nr " << newEmployee.employeeId << " >>---" << endl
-              << "\nName: " << newEmployee.name << endl
-              << "Surname: " << newEmployee.surname << endl
-              << "Gender: " << newEmployee.gender << endl
-              << "Age: " << newEmployee.age << "\n\n";
+    cout << "\nRegistered new employee!" << endl;
+
+    displayObject(newEmployee, cout);
 }
 
 void FileSaver::uploadDataFile(vecEmp &currentVector) const
@@ -87,12 +78,12 @@ void FileSaver::uploadDataFile(vecEmp &currentVector) const
         for (int i = 0; i < currentVector.size(); i++)
         {
             currentVector.at(i).employeeId = i + 1;
-            
+            write << "\n";
             write << currentVector.at(i).employeeId << endl;
             write << currentVector.at(i).name << endl;
             write << currentVector.at(i).surname << endl;
             write << currentVector.at(i).gender << endl;
-            write << currentVector.at(i).age << endl;
+            write << currentVector.at(i).age;
         }
 
         write.close();

@@ -16,12 +16,23 @@ struct Employee
     unsigned employeeId;
     std::string name;
     std::string surname;
-    char gender;
+
+    enum class Gender
+    {
+        MALE,
+        FEMALE,
+        NOT_SET
+    };
+
+    Gender gender;
     unsigned age;
 
-    Employee(unsigned int objId = 0, std::string objName = "unknown", std::string objSurname = "unknown", char objGender = '-', unsigned int objAge = 0);
+    Employee(unsigned int objId = 0, std::string objName = "unknown", std::string objSurname = "unknown", Gender objGender = Gender::NOT_SET, unsigned int objAge = 0);
     Employee(const Employee &copyObj);
     ~Employee();
+
 };
+   
+
 
 #endif

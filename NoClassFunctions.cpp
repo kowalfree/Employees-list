@@ -15,6 +15,40 @@ using std::cin;
 using std::string;
 using std::endl;
 
+std::ostream &operator<<(std::ostream &os, Employee::Gender &obj)
+{   
+    switch (obj)
+    {
+        case Employee::Gender::MALE: os << "MALE"; break;
+        case Employee::Gender::FEMALE: os << "FEMALE"; break;
+        default: os << "NOT_SET";
+    }
+    
+    return os;
+};
+
+std::istream &operator>>(std::istream &is, Employee::Gender &obj)
+{   
+    std::string input;
+    is >> input;
+
+
+    if (input == "MALE")
+    {
+        obj = Employee::Gender::MALE;
+    }
+    else if (input == "FEMALE")
+    {
+        obj = Employee::Gender::FEMALE;
+    }
+    else
+    {
+        obj = Employee::Gender::NOT_SET;
+    }
+    
+    return is;
+};
+
 bool inputsValidator(Employee &newObject) // function for validate inputs for createLocalStorage function
 {
     do // check input name is string
@@ -35,25 +69,24 @@ bool inputsValidator(Employee &newObject) // function for validate inputs for cr
         
     } while(!isString(newObject.surname));
     
-    do // check input gender is correct
+    // check input gender is correct
+    bool myInput = {true};
+    do 
     {   
-        std::cout << "Please write gender of employee [M/F]: ";
-        newObject.gender = toupper(getche());
-        
-        if (newObject.gender == 'M' || newObject.gender == 'F')
+        cout << "Please write gender of employee [M/F]: ";
+        char inputGender = toupper(getche());
+
+        switch (inputGender)
         {
-            break;
+            case 'M': newObject.gender = Employee::Gender::MALE; myInput = false; break;
+            case 'F': newObject.gender = Employee::Gender::FEMALE; myInput = false; break;
+            default : cout << "\n\nInput value is not correct. Try again.\n\n";
         }
-        else
-        {
-            std::cout << "\n\nInput value is not correct. Try again.\n\n";
-        }
-        
-    } while(true);
+
+    } while(myInput);
 
     // check input age is integer
     string inputAge;
-    
     do 
     {
         cout << "\nPlease write age of employee: ";
@@ -68,12 +101,12 @@ bool inputsValidator(Employee &newObject) // function for validate inputs for cr
 
 bool isInteger(const string &exampleInput) // function for validate input_integer
 {
-    std::regex integerValue("\\D"); // \\D: matches any non-digit characters
-    bool result = regex_search(exampleInput, integerValue);
+    std::regex notInteger("\\D"); // \\D: matches any non-digit characters
+    bool result = regex_search(exampleInput, notInteger);
 
     if(result)
     {   
-        cout << "\nInput value is not correct. Try again.\n\n";
+        cout << "\nInput value is not correct. Try again.\n";
     }
     else
     {   
@@ -85,9 +118,8 @@ bool isInteger(const string &exampleInput) // function for validate input_intege
 
 bool isString(const string &exampleString) // function for validate input_string
 {
-    std::regex isString("[\\d\\W_]"); 
-    // regex = [\\d\\W_] = [-_'\";:,.<>/?=+!@#$%^&*(){}|\\`\]\[~0-9], \\d: matches any digit character. \\W: matches any non-word character. 
-    bool result = regex_search(exampleString, isString);
+    std::regex notString("[\\d\\W_]"); // \\d: matches any digit character. \\W: matches any non-word character. 
+    bool result = regex_search(exampleString, notString); 
 
     if(result || exampleString == "employeesData")
     {   
@@ -99,6 +131,15 @@ bool isString(const string &exampleString) // function for validate input_string
     }
     
     return false;
+}
+
+void displayObject(Employee &myObject, std::ostream &os) // display object informations
+{
+    os << "\n---<< Employee nr " << myObject.employeeId << " >>---" << endl
+       << "\nName: " << myObject.name << endl
+       << "Surname: " << myObject.surname << endl
+       << "Gender: " << myObject.gender << endl
+       << "Age: " << myObject.age << "\n\n";
 }
 
 void displayMenu() // display menu with options
@@ -124,7 +165,6 @@ int makeChoice() // choice options
     {
         cout << "\nYour option: ";
         cin >> input;
-        cout << "\n";
 
         if (isInteger(input))
         {

@@ -30,13 +30,8 @@ void Database::showData(const vecEmp &currentVector) const // read current all d
 
         for (auto element: currentVector)
         {
-            cout   << "\n<< Employee nr " << element.employeeId << " >>" << endl
-                        << "\nName: " << element.name << endl
-                        << "Surname: " << element.surname << endl
-                        << "Gender: " << element.gender << endl
-                        << "Age: " << element.age << endl;
+            displayObject(element, cout);
         } 
-        cout << "\n";
     }
 }
 
@@ -48,8 +43,7 @@ void Database::generateDocFile(const vecEmp &currentVector) const // function fo
     }
     else 
     {   
-        string fileName;
-        std::ofstream write; 
+        string fileName; 
     
         do // check input name is string
         {
@@ -58,17 +52,14 @@ void Database::generateDocFile(const vecEmp &currentVector) const // function fo
 
         } while(!isString(fileName));
 
+        std::ofstream write;
         write.open(fileName + ".doc", std::ios::out);
 
         write << "LIST OF YOUR EMPLOYEES ( " << currentVector.size() << " REGISTERED EMPLOYEES ) :\n\n"; 
 
         for (auto element: currentVector)
         {
-            write << "\n<< Employee nr " << element.employeeId << " >>" << endl;
-            write << "\nName: " << element.name << endl;
-            write << "Surname: " << element.surname << endl;
-            write << "Gender: " << element.gender << endl;
-            write << "Age: " << element.age << endl << endl;
+            displayObject(element, write);
         } 
 
         write.close();
@@ -80,28 +71,27 @@ void Database::generateDocFile(const vecEmp &currentVector) const // function fo
 int Database::validateInteger(const vecEmp &currentVector) const // function for check if input is integer
 {   
     string number;
-    bool option = {true};
+    bool integerValue = {true};
 
-    while (option)
+    do
     {
-        cout << "\nPlease write number of employee: ";
+        cout << "Please write number of employee: ";
         cin >> number;
 
-        if (not isInteger(number)) // statement for check if input is integer
+        if (isInteger(number))
         {
-            cout << "\nThe entered value is not correct, try again." << endl; 
-            continue;;
-        } 
-        else if (stoi(number) > currentVector.size())
-        {   
-            cout << "\nThe entered value is not correct! There are " << currentVector.size() << " registered employees in the database. Try again." << endl; 
-        } 
-        else 
-        { 
-            option = false;
+           if (stoi(number) > currentVector.size())
+            {   
+                cout << "There are " << currentVector.size() << " registered employees in the database. Try again.\n" << endl;
+            } 
+            else 
+            {
+                integerValue = {false};
+            } 
         }
-    }
-    
+
+    } while (integerValue);
+
     return stoi(number) - 1;
 }
 
@@ -113,14 +103,9 @@ void Database::search(const vecEmp &currentVector) const // function for display
     } 
     else
     {
-        int new_number = validateInteger(currentVector);
-        
-        cout   << "\n<< Employee nr " << currentVector.at(new_number).employeeId << " >>" << endl
-                    << "\nName: " << currentVector.at(new_number).name << endl
-                    << "Surname: " << currentVector.at(new_number).surname << endl
-                    << "Gender: " << currentVector.at(new_number).gender << endl
-                    << "Age: " << currentVector.at(new_number).age << "\n\n";
-        
+        int indexNum = validateInteger(currentVector);
+        auto element = currentVector.at(indexNum);
+        displayObject(element, cout);
     }
 }   
 
@@ -133,12 +118,8 @@ void Database::deleteEmployee(vecEmp &currentVector) const // function for delet
     else
     {
         int idToDelete = validateInteger(currentVector);
-
-        cout   << "\n<< Employee nr " << currentVector.at(idToDelete).employeeId << " >>" << endl
-                    << "\nName: " << currentVector.at(idToDelete).name << endl
-                    << "Surname: " << currentVector.at(idToDelete).surname << endl
-                    << "Gender: " << currentVector.at(idToDelete).gender << endl
-                    << "Age: " << currentVector.at(idToDelete).age << endl;
+        auto element = currentVector.at(idToDelete);
+        displayObject(element, cout);
 
         currentVector.erase(currentVector.begin() + idToDelete);
         cout << "\nEmploee number " << ++idToDelete << " was deleted!\n\n";
