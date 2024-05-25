@@ -10,11 +10,9 @@
 
 #include "Employee.h"
 
-typedef std::vector <Employee> vecEmp;
-
 struct FileSaver
 {
-    vecEmp createLocalStorage()const;
-    void addToFile(const vecEmp &currentVector) const;
-    void uploadDataFile(vecEmp &currentVector) const;
+    std::vector <Employee> createLocalStorage() const;
+    void addToFile(Employee &exampleEmployee) const;
+    void uploadDataFile(std::vector <Employee> &currentVector) const;
 };

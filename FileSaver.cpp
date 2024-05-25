@@ -13,12 +13,11 @@
 
 using std::cout;
 using std::endl;
-typedef std::vector <Employee> vecEmp;
 
-vecEmp FileSaver::createLocalStorage() const // create vector of objects from file
+std::vector <Employee> FileSaver::createLocalStorage() const
 {
-    vecEmp tempData;
-    std::fstream read; 
+    std::vector <Employee> storage;
+    std::ifstream read; 
 
     read.open("employeesData.txt", std::ios::in); 
 
@@ -34,56 +33,51 @@ vecEmp FileSaver::createLocalStorage() const // create vector of objects from fi
             read >> member.gender;
             read >> member.age;
 
-            tempData.push_back(member); 
+            storage.emplace_back(member); 
         } 
     }
 
     read.close();
 
-    return tempData;
+    return storage;
 }
 
-void FileSaver::addToFile(const vecEmp &currentVector) const // write to file a new employee
+void FileSaver::addToFile(Employee &exampleEmployee) const
 {   
-    Employee newEmployee;
-
-    inputsValidator(newEmployee);
-
     std::ofstream write;
-    newEmployee.employeeId = currentVector.size() + 1;
 
     write.open("employeesData.txt", std::ios::out | std::ios::app);
     write << "\n";
-    write << newEmployee.employeeId << endl;
-    write << newEmployee.name << endl;
-    write << newEmployee.surname << endl;
-    write << newEmployee.gender << endl;
-    write << newEmployee.age;
+    write << exampleEmployee.employeeId << endl;
+    write << exampleEmployee.name << endl;
+    write << exampleEmployee.surname << endl;
+    write << exampleEmployee.gender << endl;
+    write << exampleEmployee.age;
 
     write.close();
 
     cout << "\nRegistered new employee!" << endl;
-
-    displayObject(newEmployee, cout);
 }
 
-void FileSaver::uploadDataFile(vecEmp &currentVector) const
+void FileSaver::uploadDataFile(std::vector <Employee> &currentVector) const
 {
     if (not currentVector.empty())
     {
         std::ofstream write; 
+        currentVector.at(0).employeeId = 0;
 
-        write.open("employeesData.txt", std::ios::out | std::ios::trunc); //  clear all file and write a new data file from vector of objects
+        write.open("employeesData.txt", std::ios::out | std::ios::trunc);
 
-        for (int i = 0; i < currentVector.size(); i++)
-        {
-            currentVector.at(i).employeeId = i + 1;
+        for (auto e: currentVector)
+        {   
+            e.employeeId++;
+
             write << "\n";
-            write << currentVector.at(i).employeeId << endl;
-            write << currentVector.at(i).name << endl;
-            write << currentVector.at(i).surname << endl;
-            write << currentVector.at(i).gender << endl;
-            write << currentVector.at(i).age;
+            write << e.employeeId << endl;
+            write << e.name << endl;
+            write << e.surname << endl;
+            write << e.gender << endl;
+            write << e.age;
         }
 
         write.close();

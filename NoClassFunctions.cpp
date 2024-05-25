@@ -32,7 +32,6 @@ std::istream &operator>>(std::istream &is, Employee::Gender &obj)
     std::string input;
     is >> input;
 
-
     if (input == "MALE")
     {
         obj = Employee::Gender::MALE;
@@ -49,18 +48,18 @@ std::istream &operator>>(std::istream &is, Employee::Gender &obj)
     return is;
 };
 
-bool inputsValidator(Employee &newObject) // function for validate inputs for createLocalStorage function
+bool decribeEmployee(Employee &newObject)
 {
-    do // check input name is string
+    do 
     {
-        cout << "Please write name of employee: ";
+        cout << "\nPlease write name of employee: ";
         cin >> newObject.name;
         cin.clear();
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     } while(!isString(newObject.name)); 
 
-    do // check input surname is string
+    do 
     {
         cout << "Please write surname of employee: ";
         cin >> newObject.surname;
@@ -69,8 +68,7 @@ bool inputsValidator(Employee &newObject) // function for validate inputs for cr
         
     } while(!isString(newObject.surname));
     
-    // check input gender is correct
-    bool myInput = {true};
+    bool myInput = true;
     do 
     {   
         cout << "Please write gender of employee [M/F]: ";
@@ -85,7 +83,6 @@ bool inputsValidator(Employee &newObject) // function for validate inputs for cr
 
     } while(myInput);
 
-    // check input age is integer
     string inputAge;
     do 
     {
@@ -99,12 +96,11 @@ bool inputsValidator(Employee &newObject) // function for validate inputs for cr
     return true;
 }
 
-bool isInteger(const string &exampleInput) // function for validate input_integer
+bool isInteger(const string &exampleInput)
 {
     std::regex notInteger("\\D"); // \\D: matches any non-digit characters
-    bool result = regex_search(exampleInput, notInteger);
 
-    if(result)
+    if(regex_search(exampleInput, notInteger))
     {   
         cout << "\nInput value is not correct. Try again.\n";
     }
@@ -116,12 +112,11 @@ bool isInteger(const string &exampleInput) // function for validate input_intege
     return false;
 }
 
-bool isString(const string &exampleString) // function for validate input_string
+bool isString(const string &exampleString)
 {
     std::regex notString("[\\d\\W_]"); // \\d: matches any digit character. \\W: matches any non-word character. 
-    bool result = regex_search(exampleString, notString); 
 
-    if(result || exampleString == "employeesData")
+    if(regex_search(exampleString, notString) || exampleString == "employeesData")
     {   
         cout << "\nInput value is not correct. Try again.\n\n";
     }
@@ -133,7 +128,7 @@ bool isString(const string &exampleString) // function for validate input_string
     return false;
 }
 
-void displayObject(Employee &myObject, std::ostream &os) // display object informations
+void displayObject(Employee &myObject, std::ostream &os)
 {
     os << "\n---<< Employee nr " << myObject.employeeId << " >>---" << endl
        << "\nName: " << myObject.name << endl
@@ -142,23 +137,23 @@ void displayObject(Employee &myObject, std::ostream &os) // display object infor
        << "Age: " << myObject.age << "\n\n";
 }
 
-void displayMenu() // display menu with options
+void displayMenu()
 {
     cout << "\n_________________________________________________________________________________________________________________________________________________\n";
     cout << "\nThis is list of employees, please choose one of the options below:\n\n";
-    cout << "1 - Show all list of employees" << endl;
-    cout << "2 - Generate document file" << endl;
-    cout << "3 - Add a new employee" << endl;
-    cout << "4 - Search employee from list" << endl;
-    cout << "5 - Delete employee from list" << endl;
-    cout << "6 - Remove all list" << endl;
-    cout << "7 - Quit" << endl;
+    cout << "1 - Show all list of employees\n";
+    cout << "2 - Generate document file\n";
+    cout << "3 - Add a new employee\n";
+    cout << "4 - Search employee from list\n";
+    cout << "5 - Delete employee from list\n";
+    cout << "6 - Remove all list\n";
+    cout << "7 - Quit\n";
 }
 
-int makeChoice() // choice options
+int makeChoice()
 {
-    int option = {0};
-    bool inRange = {true};
+    int option = 0;
+    bool inRange = true;
     string input;
 
     while(inRange)
@@ -170,7 +165,7 @@ int makeChoice() // choice options
         {
             option = stoi(input);
 
-            if (option < 1 ||  option > 7) // condition for check range od numbers
+            if (std::clamp(option, 1, 7) != option)
             {
                 cout << "\nInput value is out of range. Try again." << endl;
             } 
@@ -182,9 +177,4 @@ int makeChoice() // choice options
     }
 
     return option;
-}
-
-void removeList() // function for destroy data file
-{   
-    (remove("employeesData.txt") == 0)?  cout << "\nData file deleted successfully!\n\n" : cout << "\nData file doesn't exist. Add a new employee.\n\n";
 }

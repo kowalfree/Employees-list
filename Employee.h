@@ -13,7 +13,7 @@
 
 struct Employee
 {   
-    unsigned employeeId;
+    unsigned int employeeId;
     std::string name;
     std::string surname;
 
@@ -25,14 +25,11 @@ struct Employee
     };
 
     Gender gender;
-    unsigned age;
+    unsigned int age;
 
     Employee(unsigned int objId = 0, std::string objName = "unknown", std::string objSurname = "unknown", Gender objGender = Gender::NOT_SET, unsigned int objAge = 0);
     Employee(const Employee &copyObj);
     ~Employee();
-
 };
-   
-
 
 #endif

@@ -14,9 +14,8 @@ typedef std::vector <Employee> vecEmp;
 
 struct Database 
 {   
-    int validateInteger(const vecEmp &currentVector) const;
     void showData(const vecEmp &currentVector) const;
     void generateDocFile(const vecEmp &currentVector) const;
-    void search(const vecEmp &currentVector) const;
-    void deleteEmployee(vecEmp &currentVector) const;
+    int search(const vecEmp &currentVector) const;
+    void deleteEmployee(vecEmp &currentVector, int &idToDelete) const;
 };
