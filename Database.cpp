@@ -25,7 +25,6 @@ void Database::showData(const vecEmp &currentVector) const
     {
         displayObject(element, cout);
     } 
-    
 }
 
 void Database::generateDocFile(const vecEmp &currentVector) const
@@ -70,7 +69,7 @@ int Database::search(const vecEmp &currentVector) const
         }
         else if (stoi(number) > currentVector.size() || stoi(number) == 0)
         {   
-            cout << "\nEmployee number starts from 1.There is/are " << currentVector.size() << " registered employee/s in the database. Try again.\n" << endl;
+            cout << "\nEmployee number starts from 1. There is/are " << currentVector.size() << " registered employee/s in the database. Try again.\n" << endl;
         }
         else 
         {
